@@ -1,0 +1,7 @@
+{
+  "name": "bs-benchmarkjs",
+  "sources": ["src", {
+    "dir": "examples",
+    "type": "dev"
+  }]
+}
