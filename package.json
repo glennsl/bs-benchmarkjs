@@ -6,9 +6,16 @@
     "build": "bsb -make-world",
     "start": "bsb -make-world -w"
   },
+  "homepage": "https://github.com/glennsl/bs-benchmarkjs#readme",
+  "bugs": "https://github.com/glennsl/bs-benchmarkjs/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/glennsl/bs-benchmarkjs.git"
+  },
   "keywords": [
-    "BuckleScript",
-    "Benchmark.js"
+    "bucklescript",
+    "benchmark.js",
+    "banchmarking",
   ],
   "license": "MIT",
   "dependencies": {
