@@ -12,5 +12,5 @@ type t = BenchmarkJs__Types.deferred;
 
 include Impl({
   type nonrec t = t;
-  type benchmark = BenchmarkJs__Types.benchmark;
+  include BenchmarkJs__Types;
 });

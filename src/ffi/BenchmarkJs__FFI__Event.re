@@ -18,5 +18,5 @@ type t = BenchmarkJs__Types.event;
 
 include Impl({
   type nonrec t = t;
-  type benchmark = BenchmarkJs__Types.benchmark;
+  include BenchmarkJs__Types;
 });

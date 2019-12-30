@@ -15,7 +15,7 @@ type setupFn = (. unit) => unit;
 type teardownFn = (. unit) => unit;
 type eventHandler = (. event) => unit;
 
-type eventName =  [
+type eventType =  [
   | `abort
   | `complete
   | `cycle
@@ -26,7 +26,7 @@ type eventName =  [
 ];
 
 
-let decodeEventName: string => eventName = fun
+let decodeEventType: string => eventType = fun
   | "abort" => `abort
   | "complete" => `complete
   | "cycle" => `cycle
@@ -35,7 +35,7 @@ let decodeEventName: string => eventName = fun
   | "start" => `start
   | _ => `unknown;
 
-let encodeEventName: eventName => string = fun
+let encodeEventType: eventType => string = fun
   | `abort => "abort"
   | `complete => "complete"
   | `cycle => "cycle"

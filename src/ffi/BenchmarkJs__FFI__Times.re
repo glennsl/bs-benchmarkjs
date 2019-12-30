@@ -9,4 +9,4 @@ type t = BenchmarkJs__Types.times;
 
 include Impl({
   type nonrec t = t;
-});
+})

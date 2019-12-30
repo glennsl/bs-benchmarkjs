@@ -1,10 +1,11 @@
+
 module Impl = (T: {
-                 type t;
-                 type eventHandler;
-                 type testFn;
-                 type setupFn;
-                 type teardownFn;
-               }) => {
+  type t;
+  type eventHandler;
+  type testFn;
+  type setupFn;
+  type teardownFn;
+}) => {
   [@bs.set] external setAsync: (T.t, bool) => unit = "async";
   [@bs.set] external setDefer: (T.t, bool) => unit = "defer";
   [@bs.set] external setDelay: (T.t, float) => unit = "delay";

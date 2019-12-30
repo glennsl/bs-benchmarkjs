@@ -8,8 +8,7 @@ module Impl = (T: {
                  type teardownFn;
                }) => {
   [@bs.module "benchmark"] [@bs.new] external make: (string, T.testFn, ~options: T.options=?) => T.t = "Benchmark";
-
-  module Make_withArgs = {
+  module MakeWith = {
     [@bs.module "benchmark"] [@bs.new] external fn: T.testFn => T.t = "Benchmark";
     [@bs.module "benchmark"] [@bs.new] external fn_options: (T.testFn, T.options) => T.t = "Benchmark";
     [@bs.module "benchmark"] [@bs.new] external options: T.options => T.t = "Benchmark";
@@ -47,10 +46,5 @@ type t = BenchmarkJs__Types.benchmark;
 
 include Impl({
   type nonrec t = t;
-  type options = BenchmarkJs__Types.options;
-  type stats = BenchmarkJs__Types.stats;
-  type times = BenchmarkJs__Types.times;
-  type testFn = BenchmarkJs__Types.testFn;
-  type setupFn = BenchmarkJs__Types.setupFn;
-  type teardownFn = BenchmarkJs__Types.teardownFn;
+  include BenchmarkJs__Types;
 });
