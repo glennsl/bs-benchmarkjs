@@ -1,8 +1,8 @@
 
-  # bs-benchmarkjs
+# bs-benchmarkjs
 
-  Very very basic bindings to [Benchmark.js](https://benchmarkjs.com/)
+Very very basic bindings to [Benchmark.js](https://benchmarkjs.com/)
 
-  ## Usage
+## Usage
 
-  See [examples](https://github.com/glennsl/bs-benchmarkjs/tree/master/examples)
+Examples coming soon.
