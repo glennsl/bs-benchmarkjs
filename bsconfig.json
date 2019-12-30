@@ -1,5 +1,6 @@
 {
   "name": "bs-benchmarkjs",
+  "namespace": true,
   "sources": [
     {
       "dir": "src",
