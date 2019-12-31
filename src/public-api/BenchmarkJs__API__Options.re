@@ -1,7 +1,6 @@
 module type Intf = {
   open BenchmarkJs__Types;
 
-  // type t = options;
   let copy: options => options;
   let empty: unit => options;
 
@@ -119,6 +118,9 @@ module Impl = (T: {
   let copy: T.t => T.t = options => Js__Utils.Obj.shallowCopy(. options);
   let empty: unit => T.t = () => Js__Utils.Obj.empty(.);
 
+  /** [ make ] constructs the [ Options.t ] external object. All fields are optional,
+   * and will affect the behavior of a benchmark test when used to construct a [ Benchmark.t ]
+   */
   let make =
       (
         ~async: option(bool)=?,
