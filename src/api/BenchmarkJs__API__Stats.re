@@ -1,8 +1,6 @@
-
 module Impl = (T: {
   type t;
 }) => {
-  /** [module Internal] For internal use, not recommended for public use. */
   module Internal = {
     include BenchmarkJs__FFI.Stats.Impl({
       type t = T.t;
@@ -22,8 +20,4 @@ module Impl = (T: {
   let getSEM: T.t => float = Internal.getSEM;
   /** Returns the variance of the sample. */
   let getVariance: T.t => float = Internal.getVariance;
-}
-
-type t = BenchmarkJs__Types.stats;
-
-include Impl({ type nonrec t = t; });
+};

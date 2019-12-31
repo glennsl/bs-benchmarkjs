@@ -13,7 +13,3 @@ module Impl = (T: {type benchmark;}) => {
   [@bs.module "benchmark"] [@bs.scope "Benchmark"]
   external filterBySuccessful: (array(T.benchmark), [@bs.as "successful"] _) => array(T.benchmark) = "filter";
 };
-
-include Impl({
-  type benchmark = BenchmarkJs__Types.benchmark;
-});

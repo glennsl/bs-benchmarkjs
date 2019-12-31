@@ -4,9 +4,3 @@ module Impl = (T: {type t;}) => {
   [@bs.get] external getPeriod: T.t => float = "period";
   [@bs.get] external getTimeStamp: T.t => float = "timeStamp";
 };
-
-type t = BenchmarkJs__Types.times;
-
-include Impl({
-  type nonrec t = t;
-})

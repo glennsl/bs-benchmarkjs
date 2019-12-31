@@ -59,16 +59,3 @@ module Impl =
   [@bs.val] [@bs.scope ("Array", "prototype", "slice")]
   external toBenchmarkArray: T.t => array(T.benchmark) = "call";
 };
-
-type t = BenchmarkJs__Types.suite;
-
-include Impl({
-  type nonrec t = t;
-  type benchmark = BenchmarkJs__Types.benchmark;
-  type suiteOptions = BenchmarkJs__Types.suiteOptions;
-  type options = BenchmarkJs__Types.options;
-  type event = BenchmarkJs__Types.event;
-  type eventHandler = BenchmarkJs__Types.eventHandler;
-  type testFn = BenchmarkJs__Types.testFn;
-  type setupFn = BenchmarkJs__Types.setupFn;
-});

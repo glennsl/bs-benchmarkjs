@@ -18,10 +18,3 @@ module Impl = (T: {
   [@bs.set] external setOnReset: (T.t, T.eventHandler) => unit = "onReset";
   [@bs.set] external setOnStart: (T.t, T.eventHandler) => unit = "onStart";
 };
-
-type t = BenchmarkJs__Types.suiteOptions;
-
-include Impl({
-  type nonrec t = t;
-  type eventHandler = BenchmarkJs__Types.eventHandler;
-});

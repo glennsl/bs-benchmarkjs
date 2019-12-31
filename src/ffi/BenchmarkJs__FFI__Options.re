@@ -46,13 +46,3 @@ module Impl = (T: {
   [@bs.get] external getTeardown: T.t => Js.Null_undefined.t(T.teardownFn) = "teardown";
   [@bs.get] external getQueued: T.t => Js.Null_undefined.t(bool) = "queued";
 };
-
-type t = BenchmarkJs__Types.options;
-
-include Impl({
-  type nonrec t = t;
-  type eventHandler = BenchmarkJs__Types.eventHandler;
-  type testFn = BenchmarkJs__Types.testFn;
-  type setupFn = BenchmarkJs__Types.setupFn;
-  type teardownFn = BenchmarkJs__Types.teardownFn;
-});

@@ -7,9 +7,3 @@ module Impl = (T: {type t;}) => {
   [@bs.get] external getSEM: T.t => float = "sem";
   [@bs.get] external getVariance: T.t => float = "variance";
 };
-
-type t = BenchmarkJs__Types.stats;
-
-include Impl({
-  type nonrec t = t;
-});

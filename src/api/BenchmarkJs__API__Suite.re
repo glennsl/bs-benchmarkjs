@@ -13,8 +13,8 @@ module Impl =
            type setupFn;
            type teardownFn;
            type eventType;
-           let encodeEventType: eventType => string;
-           let decodeEventType: string => eventType;
+           let eventTypeToString: eventType => string;
+           let eventTypeFromString: string => eventType;
          },
        ) => {
   module Internal = {
@@ -42,7 +42,7 @@ module Impl =
 
     // TODO: needs testing
     let eventListToString: list(T.eventType) => string =
-      eventList => Belt.List.reduceU(eventList, "", (. str, evt) => {str ++ T.encodeEventType(evt) ++ " "});
+      eventList => Belt.List.reduceU(eventList, "", (. str, evt) => {str ++ T.eventTypeToString(evt) ++ " "});
     let addBenchmarkToSuite: (. T.t, T.benchmark) => T.t =
       (. suite, bench) =>
         addWithOptions(Benchmark.getName(bench), Benchmark.getFn(bench), Benchmark.getOptions(bench), suite);
@@ -86,9 +86,9 @@ module Impl =
 
   let getListeners: T.t => array(T.eventHandler) = Internal.getListeners;
   let getListenersByEvent: (T.eventType, T.t) => array(T.eventHandler) =
-    (eventType, suite) => Internal.getListenersByEvent(T.encodeEventType(eventType), suite);
+    (eventType, suite) => Internal.getListenersByEvent(T.eventTypeToString(eventType), suite);
 
-  let emit: (T.eventType, T.t) => T.t = (eventType, suite) => Internal.emit(T.encodeEventType(eventType), suite);
+  let emit: (T.eventType, T.t) => T.t = (eventType, suite) => Internal.emit(T.eventTypeToString(eventType), suite);
 
   let abort: T.t => T.t = Internal.abort;
   let reset: T.t => T.t = Internal.reset;
@@ -134,10 +134,3 @@ module Impl =
       Belt.List.reverse(benchList)->Belt.List.reduceU(suite, Internal.addBenchmarkToSuite);
     };
 };
-
-type t = BenchmarkJs__Types.suite;
-
-include Impl({
-  type nonrec t = t;
-  include BenchmarkJs__Types;
-});

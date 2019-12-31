@@ -12,10 +12,3 @@ module Impl = (T: {
   let getElapsed: T.t => float = Internal.getElapsed;
   let getTimeStamp: T.t => float = Internal.getTimeStamp;
 };
-
-type t = BenchmarkJs__Types.deferred;
-
-include Impl({
-  type nonrec t = t;
-  type benchmark = BenchmarkJs__Types.benchmark;
-});

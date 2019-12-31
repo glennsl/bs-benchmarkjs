@@ -5,9 +5,3 @@ module Impl = (T: {type t;}) => {
   [@bs.get] external getDecompilation: T.t => bool = "decompilation";
   [@bs.get] external getTimeout: T.t => bool = "timeout";
 };
-
-type t = BenchmarkJs__Types.support;
-
-include Impl({
-  type nonrec t = t;
-});

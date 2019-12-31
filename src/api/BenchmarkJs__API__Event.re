@@ -4,8 +4,8 @@ module Impl =
            type t;
            type benchmark;
            type eventType;
-           let encodeEventType: eventType => string;
-           let decodeEventType: string => eventType;
+           let eventTypeToString: eventType => string;
+           let eventTypeFromString: string => eventType;
          },
        ) => {
   module Internal = {
@@ -15,9 +15,9 @@ module Impl =
     });
   };
   type eventType = T.eventType;
-  let encodeEventType = T.encodeEventType;
-  let decodeEventType = T.decodeEventType;
-  let make: eventType => T.t = name => Internal.(make(encodeEventType(name)));
+  let eventTypeToString = T.eventTypeToString;
+  let eventTypeFromString = T.eventTypeFromString;
+  let make: eventType => T.t = name => Internal.(make(eventTypeToString(name)));
   let fromEvent: T.t => T.t = Internal.fromEvent;
   let isAborted: T.t => bool = Internal.getAborted;
   let isCancelled: T.t => bool = Internal.getCancelled;
@@ -25,13 +25,3 @@ module Impl =
   let target: T.t => T.benchmark = Internal.getTarget;
   let timeStamp: T.t => int = Internal.getTimeStamp;
 };
-
-type t = BenchmarkJs__Types.event;
-
-include Impl({
-  type nonrec t = t;
-  type benchmark = BenchmarkJs__Types.benchmark;
-  type eventType = BenchmarkJs__Types.eventType;
-  let encodeEventType = BenchmarkJs__Types.encodeEventType;
-  let decodeEventType = BenchmarkJs__Types.decodeEventType;
-});

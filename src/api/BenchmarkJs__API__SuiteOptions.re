@@ -107,11 +107,4 @@ module Impl = (T: {
       };
       opt;
     };
-}
-
-type t = BenchmarkJs__Types.suiteOptions;
-
-include Impl({
-  type nonrec t = t;
-  type eventHandler = BenchmarkJs__Types.eventHandler;
-});
+};

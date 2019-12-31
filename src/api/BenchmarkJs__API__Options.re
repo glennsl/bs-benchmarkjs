@@ -1,108 +1,10 @@
-module type Intf = {
-  open BenchmarkJs__Types;
-
-  let copy: options => options;
-  let empty: unit => options;
-
-  let make:
-    (
-      ~async: bool=?,
-      ~defer: bool=?,
-      ~delay: float=?,
-      ~id: string=?,
-      ~initCount: int=?,
-      ~maxTime: float=?,
-      ~minSamples: int=?,
-      ~minTime: float=?,
-      ~name: string=?,
-      ~onAbort: eventHandler=?,
-      ~onComplete: eventHandler=?,
-      ~onCycle: eventHandler=?,
-      ~onError: eventHandler=?,
-      ~onReset: eventHandler=?,
-      ~onStart: eventHandler=?,
-      ~fn: testFn=?,
-      ~setup: setupFn=?,
-      ~teardown: teardownFn=?,
-      ~queued: bool=?,
-      unit
-    ) =>
-    options;
-
-  let update:
-    (
-      ~async: bool=?,
-      ~defer: bool=?,
-      ~delay: float=?,
-      ~id: string=?,
-      ~initCount: int=?,
-      ~maxTime: float=?,
-      ~minSamples: int=?,
-      ~minTime: float=?,
-      ~name: string=?,
-      ~onAbort: eventHandler=?,
-      ~onComplete: eventHandler=?,
-      ~onCycle: eventHandler=?,
-      ~onError: eventHandler=?,
-      ~onReset: eventHandler=?,
-      ~onStart: eventHandler=?,
-      ~fn: testFn=?,
-      ~setup: setupFn=?,
-      ~teardown: teardownFn=?,
-      ~queued: bool=?,
-      options
-    ) =>
-    options;
-
-  let getAsync: options => option(bool);
-  let getDefer: options => option(bool);
-  let getDelay: options => option(float);
-  let getId: options => option(string);
-  let getInitCount: options => option(int);
-  let getMaxTime: options => option(float);
-  let getMinSamples: options => option(int);
-  let getMinTime: options => option(float);
-  let getName: options => option(string);
-  let getOnAbort: options => option(eventHandler);
-  let getOnComplete: options => option(eventHandler);
-  let getOnCycle: options => option(eventHandler);
-  let getOnError: options => option(eventHandler);
-  let getOnReset: options => option(eventHandler);
-  let getOnStart: options => option(eventHandler);
-  let getFn: options => option(testFn);
-  let getSetup: options => option(setupFn);
-  let getTeardown: options => option(teardownFn);
-  let getQueued: options => option(bool);
-
-  let setAsync: (bool, options) => options;
-  let setDefer: (bool, options) => options;
-  let setDelay: (float, options) => options;
-  let setId: (string, options) => options;
-  let setInitCount: (int, options) => options;
-  let setMaxTime: (float, options) => options;
-  let setMinSamples: (int, options) => options;
-  let setMinTime: (float, options) => options;
-  let setName: (string, options) => options;
-  let setOnAbort: (eventHandler, options) => options;
-  let setOnComplete: (eventHandler, options) => options;
-  let setOnCycle: (eventHandler, options) => options;
-  let setOnError: (eventHandler, options) => options;
-  let setOnReset: (eventHandler, options) => options;
-  let setOnStart: (eventHandler, options) => options;
-  let setFn: (testFn, options) => options;
-  let setSetup: (setupFn, options) => options;
-  let setTeardown: (teardownFn, options) => options;
-  let setQueued: (bool, options) => options;
-};
-
 module Impl = (T: {
-  type t;
-  type eventHandler;
-  type testFn;
-  type setupFn;
-  type teardownFn;
-}) => {
-
+                 type t;
+                 type eventHandler;
+                 type testFn;
+                 type setupFn;
+                 type teardownFn;
+               }) => {
   module Internal = {
     include BenchmarkJs__FFI.Options.Impl({
       type t = T.t;
@@ -113,7 +15,6 @@ module Impl = (T: {
     });
     let nullToOption = Js.Null_undefined.toOption;
   };
-
 
   let copy: T.t => T.t = options => Js__Utils.Obj.shallowCopy(. options);
   let empty: unit => T.t = () => Js__Utils.Obj.empty(.);
@@ -453,13 +354,3 @@ module Impl = (T: {
       opt;
     };
 };
-
-type t = BenchmarkJs__Types.options;
-
-include Impl({
-    type nonrec t = t;
-    type eventHandler = BenchmarkJs__Types.eventHandler;
-    type testFn = BenchmarkJs__Types.testFn;
-    type setupFn = BenchmarkJs__Types.setupFn;
-    type teardownFn = BenchmarkJs__Types.teardownFn;
-});

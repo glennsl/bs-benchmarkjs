@@ -58,10 +58,3 @@ module Impl = (T: {
         )
     );
 };
-
-type t;
-
-include Impl({
-  type nonrec t = t;
-  include BenchmarkJs__Types;
-});

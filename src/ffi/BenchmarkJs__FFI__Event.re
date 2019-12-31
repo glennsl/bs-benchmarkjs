@@ -13,10 +13,3 @@ module Impl = (T: {
   [@bs.get] external getTimeStamp: T.t => int = "timeStamp";
   [@bs.get] external getType: T.t => string = "type";
 };
-
-type t = BenchmarkJs__Types.event;
-
-include Impl({
-  type nonrec t = t;
-  include BenchmarkJs__Types;
-});

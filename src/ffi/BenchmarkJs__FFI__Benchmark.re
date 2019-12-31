@@ -41,10 +41,3 @@ module Impl = (T: {
   [@bs.send.pipe: T.t] external cmp: T.t => int = "compare";
   [@bs.send.pipe: T.t] external reset: T.t = "reset";
 };
-
-type t = BenchmarkJs__Types.benchmark;
-
-include Impl({
-  type nonrec t = t;
-  include BenchmarkJs__Types;
-});

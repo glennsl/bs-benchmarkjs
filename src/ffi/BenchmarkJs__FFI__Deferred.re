@@ -7,10 +7,3 @@ module Impl = (T: {
   [@bs.get] external getElapsed: T.t => float = "elapsed";
   [@bs.get] external getTimeStamp: T.t => float = "timeStamp";
 };
-
-type t = BenchmarkJs__Types.deferred;
-
-include Impl({
-  type nonrec t = t;
-  include BenchmarkJs__Types;
-});

@@ -13,9 +13,3 @@ module Impl = (T: {type t;}) => {
   // instance methods
   [@bs.send.pipe: T.t] external toString: string = "toString";
 };
-
-type t = BenchmarkJs__Types.platform;
-
-include Impl({
-  type nonrec t = t;
-});
