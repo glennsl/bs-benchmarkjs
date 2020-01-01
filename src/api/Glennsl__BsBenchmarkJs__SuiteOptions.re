@@ -1,52 +1,68 @@
-
 module Impl = (T: {
-  type t;
-  type eventHandler;
-}) => {
+                 type t;
+                 type eventHandler;
+               }) => {
   module Internal = {
-    include BenchmarkJs__FFI.SuiteOptions.Impl({
-      type t = T.t;
-      type eventHandler = T.eventHandler;
-    });
+    include Glennsl__BsBenchmarkJs__FFI.SuiteOptions.Impl(T);
+    let nullToOption = Js.Nullable.toOption;
   };
 
-  let getName: T.t => string = Internal.getName;
-  let getOnAbort: T.t => T.eventHandler = Internal.getOnAbort;
-  let getOnComplete: T.t => T.eventHandler = Internal.getOnComplete;
-  let getOnCycle: T.t => T.eventHandler = Internal.getOnCycle;
-  let getOnError: T.t => T.eventHandler = Internal.getOnError;
-  let getOnReset: T.t => T.eventHandler = Internal.getOnReset;
-  let getOnStart: T.t => T.eventHandler = Internal.getOnStart;
+  let getName: T.t => option(string) = name => Internal.(getName(name)->nullToOption);
+
+  let getOnAbort: T.t => option(T.eventHandler) =
+    onAbort => Internal.(getOnAbort(onAbort)->nullToOption);
+
+  let getOnComplete: T.t => option(T.eventHandler) =
+    onComplete => Internal.(getOnComplete(onComplete)->nullToOption);
+
+  let getOnCycle: T.t => option(T.eventHandler) =
+    onCycle => Internal.(getOnCycle(onCycle)->nullToOption);
+
+  let getOnError: T.t => option(T.eventHandler) =
+    onError => Internal.(getOnError(onError)->nullToOption);
+
+  let getOnReset: T.t => option(T.eventHandler) =
+    onReset => Internal.(getOnReset(onReset)->nullToOption);
+
+  let getOnStart: T.t => option(T.eventHandler) =
+    onStart => Internal.(getOnStart(onStart)->nullToOption);
+
   let setName: (string, T.t) => T.t =
     (name, opt) => {
       Internal.setName(opt, name);
       opt;
     };
+
   let setOnAbort: (T.eventHandler, T.t) => T.t =
     (onAbort, opt) => {
       Internal.setOnAbort(opt, onAbort);
       opt;
     };
+
   let setOnComplete: (T.eventHandler, T.t) => T.t =
     (onComplete, opt) => {
       Internal.setOnComplete(opt, onComplete);
       opt;
     };
+
   let setOnCycle: (T.eventHandler, T.t) => T.t =
     (onCycle, opt) => {
       Internal.setOnCycle(opt, onCycle);
       opt;
     };
+
   let setOnError: (T.eventHandler, T.t) => T.t =
     (onError, opt) => {
       Internal.setOnError(opt, onError);
       opt;
     };
+
   let setOnReset: (T.eventHandler, T.t) => T.t =
     (onReset, opt) => {
       Internal.setOnReset(opt, onReset);
       opt;
     };
+
   let setOnStart: (T.eventHandler, T.t) => T.t =
     (onStart, opt) => {
       Internal.setOnStart(opt, onStart);
@@ -108,3 +124,8 @@ module Impl = (T: {
       opt;
     };
 };
+
+include Impl({
+  include Types;
+  type t = suiteOptions;
+});

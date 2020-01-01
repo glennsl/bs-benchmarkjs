@@ -2,13 +2,13 @@ module Impl = (T: {
                  type t;
                  type eventHandler;
                }) => {
-  [@bs.get] external getName: T.t => string = "name"; // TODO: needs tests
-  [@bs.get] external getOnAbort: T.t => T.eventHandler = "onAbort";
-  [@bs.get] external getOnComplete: T.t => T.eventHandler = "onComplete";
-  [@bs.get] external getOnCycle: T.t => T.eventHandler = "onCycle";
-  [@bs.get] external getOnError: T.t => T.eventHandler = "onError";
-  [@bs.get] external getOnReset: T.t => T.eventHandler = "onReset";
-  [@bs.get] external getOnStart: T.t => T.eventHandler = "onStart";
+  [@bs.get] external getName: T.t => Js.Nullable.t(string) = "name";
+  [@bs.get] external getOnAbort: T.t => Js.Nullable.t(T.eventHandler) = "onAbort";
+  [@bs.get] external getOnComplete: T.t => Js.Nullable.t(T.eventHandler) = "onComplete";
+  [@bs.get] external getOnCycle: T.t => Js.Nullable.t(T.eventHandler) = "onCycle";
+  [@bs.get] external getOnError: T.t => Js.Nullable.t(T.eventHandler) = "onError";
+  [@bs.get] external getOnReset: T.t => Js.Nullable.t(T.eventHandler) = "onReset";
+  [@bs.get] external getOnStart: T.t => Js.Nullable.t(T.eventHandler) = "onStart";
 
   [@bs.set] [@bs.scope "options"] external setName: (T.t, string) => unit = "name";
   [@bs.set] external setOnAbort: (T.t, T.eventHandler) => unit = "onAbort";

@@ -11,19 +11,25 @@ module Impl =
            type setupFn;
          },
        ) => {
-  [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new] external make: string => T.t = "Suite";
+
+  [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new]
+  external make: string => T.t = "Suite";
+
   [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new]
   external makeWithOptions: (string, T.suiteOptions) => T.t = "Suite";
-  // instance properties
+  
   [@bs.get] external getAborted: T.t => bool = "aborted";
+  
   [@bs.get] external getLength: T.t => int = "length";
+  
   [@bs.get] external getRunning: T.t => bool = "running";
+  
   [@bs.get] [@bs.scope "options"] external getName: T.t => string = "name";
-  // instance methods
+  
   [@bs.send.pipe: T.t] external add: (string, T.testFn) => T.t = "add";
   [@bs.send.pipe: T.t] external addWithOptions: (string, T.testFn, T.options) => T.t = "add";
 
-  module Add_withArgs = {
+  module AddWith = {
     [@bs.send.pipe: T.t] external name_fn_options: (string, T.testFn, T.options) => T.t = "add";
     [@bs.send.pipe: T.t] external name_fn: (string, T.testFn) => T.t = "add";
     [@bs.send.pipe: T.t] external name_options: (string, T.options) => T.t = "add";

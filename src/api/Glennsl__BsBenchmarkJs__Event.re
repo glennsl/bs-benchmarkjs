@@ -9,7 +9,7 @@ module Impl =
          },
        ) => {
   module Internal = {
-    include BenchmarkJs__FFI.Event.Impl({
+    include Glennsl__BsBenchmarkJs__FFI.Event.Impl({
       type t = T.t;
       type benchmark = T.benchmark;
     });
@@ -25,3 +25,8 @@ module Impl =
   let target: T.t => T.benchmark = Internal.getTarget;
   let timeStamp: T.t => int = Internal.getTimeStamp;
 };
+
+include Impl({
+  include Types;
+  type t = event;
+});

@@ -6,18 +6,18 @@ module Impl = (T: {
                  type teardownFn;
                }) => {
   module Internal = {
-    include BenchmarkJs__FFI.Options.Impl({
+    include Glennsl__BsBenchmarkJs__FFI.Options.Impl({
       type t = T.t;
       type eventHandler = T.eventHandler;
       type testFn = T.testFn;
       type setupFn = T.setupFn;
       type teardownFn = T.teardownFn;
     });
-    let nullToOption = Js.Null_undefined.toOption;
+    let nullToOption = Js.Nullable.toOption;
   };
 
-  let copy: T.t => T.t = options => Js__Utils.Obj.shallowCopy(. options);
-  let empty: unit => T.t = () => Js__Utils.Obj.empty(.);
+  let copy: T.t => T.t = options => Glennsl__BsBenchmarkJs__JsUtils.Obj.shallowCopy(. options);
+  let empty: unit => T.t = () => Glennsl__BsBenchmarkJs__JsUtils.Obj.empty(.);
 
   /** [ make ] constructs the [ Options.t ] external object. All fields are optional,
    * and will affect the behavior of a benchmark test when used to construct a [ Benchmark.t ]
@@ -354,3 +354,8 @@ module Impl = (T: {
       opt;
     };
 };
+
+include Impl({
+  include Types;
+  type t = options;
+});

@@ -3,7 +3,7 @@ module Impl = (T: {
                  type benchmark;
                }) => {
   module Internal =
-    BenchmarkJs__FFI.Deferred.Impl({
+    Glennsl__BsBenchmarkJs__FFI.Deferred.Impl({
       type t = T.t;
       type benchmark = T.benchmark;
     });
@@ -12,3 +12,8 @@ module Impl = (T: {
   let getElapsed: T.t => float = Internal.getElapsed;
   let getTimeStamp: T.t => float = Internal.getTimeStamp;
 };
+
+include Impl({
+  include Types;
+  type t = deferred;
+});

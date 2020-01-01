@@ -2,7 +2,7 @@ module Impl = (T: {
   type t;
 }) => {
   module Internal = {
-    include BenchmarkJs__FFI.Stats.Impl({
+    include Glennsl__BsBenchmarkJs__FFI.Stats.Impl({
       type t = T.t;
     });
   };
@@ -21,3 +21,8 @@ module Impl = (T: {
   /** Returns the variance of the sample. */
   let getVariance: T.t => float = Internal.getVariance;
 };
+
+include Impl({
+  include Types;
+  type t = stats;
+});

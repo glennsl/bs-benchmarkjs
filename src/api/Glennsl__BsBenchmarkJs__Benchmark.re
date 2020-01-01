@@ -9,7 +9,7 @@ module Impl = (T: {
   type stats;
 }) => {
   module Internal = {
-    include BenchmarkJs__FFI.Benchmark.Impl({
+    include Glennsl__BsBenchmarkJs__FFI.Benchmark.Impl({
       type t = T.t;
       type options = T.options;
       type testFn = T.testFn;
@@ -58,3 +58,8 @@ module Impl = (T: {
         )
     );
 };
+
+include Impl({
+  include Types;
+  type t = benchmark;
+});

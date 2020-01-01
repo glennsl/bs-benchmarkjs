@@ -2,7 +2,7 @@ module Impl = (T: {
                  type benchmark;
                }) => {
   module Internal =
-    BenchmarkJs__FFI.Utils.Impl({
+    Glennsl__BsBenchmarkJs__FFI.Utils.Impl({
       include T;
     });
   let formatFloat: float => string = Internal.formatNumber;
@@ -11,3 +11,7 @@ module Impl = (T: {
   let filterBySlowest: array(T.benchmark) => array(T.benchmark) = Internal.filterBySlowest;
   let filterBySuccessful: array(T.benchmark) => array(T.benchmark) = Internal.filterBySuccessful;
 };
+
+include Impl({
+  include Types;
+});

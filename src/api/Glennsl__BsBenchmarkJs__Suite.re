@@ -18,7 +18,7 @@ module Impl =
          },
        ) => {
   module Internal = {
-    include BenchmarkJs__FFI.Suite.Impl({
+    include Glennsl__BsBenchmarkJs__FFI.Suite.Impl({
       type t = T.t;
       type benchmark = T.benchmark;
       type suiteOptions = T.suiteOptions;
@@ -30,7 +30,7 @@ module Impl =
     });
 
     module Benchmark =
-      BenchmarkJs__FFI.Benchmark.Impl({
+      Glennsl__BsBenchmarkJs__FFI.Benchmark.Impl({
         type t = T.benchmark;
         type testFn = T.testFn;
         type setupFn = T.setupFn;
@@ -53,6 +53,7 @@ module Impl =
   let getLength: T.t => int = Internal.getLength;
   let getRunning: T.t => bool = Internal.getRunning;
 
+  /** Creates a new [ Suite.t ] object. Optionally takes a [ SuiteOptions.t ] object for configuration. */
   let make: (~options: T.suiteOptions=?, string) => T.t =
     (~options=?, name) =>
       switch (options) {
@@ -134,3 +135,8 @@ module Impl =
       Belt.List.reverse(benchList)->Belt.List.reduceU(suite, Internal.addBenchmarkToSuite);
     };
 };
+
+include Impl({
+  include Types;
+  type t = suite;
+});

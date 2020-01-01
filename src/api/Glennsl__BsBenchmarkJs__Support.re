@@ -10,12 +10,17 @@
  * the course of sampling a test case, possibly improvint the reliability
  * of the results.
  */
-module Support = (T: {type t;}) => {
+module Impl = (T: {type t;}) => {
   module Internal =
-    BenchmarkJs__FFI__Support.Impl({
+    Glennsl__BsBenchmarkJs__FFI.Support.Impl({
       type t = T.t;
     });
   let browser: bool = Internal.(getBrowser(data));
   let decompilation: bool = Internal.(getDecompilation(data));
   let timeout: bool = Internal.(getTimeout(data));
 };
+
+include Impl({
+  include Types;
+  type t = support;
+});

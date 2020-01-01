@@ -1,6 +1,6 @@
 module Impl = (T: {type t;}) => {
   module Internal =
-    BenchmarkJs__FFI.Times.Impl({
+    Glennsl__BsBenchmarkJs__FFI.Times.Impl({
       type t = T.t;
     });
   let getCycle: T.t => float = Internal.getCycle;
@@ -8,3 +8,8 @@ module Impl = (T: {type t;}) => {
   let getPeriod: T.t => float = Internal.getPeriod;
   let getTimeStamp: T.t => float = Internal.getTimeStamp;
 };
+
+include Impl({
+  include Types;
+  type t = times;
+});
