@@ -888,15 +888,9 @@ module Suite = {
 
 module Support = {
 
-  type t = support;
-
-  [@bs.module "benchmark"] [@bs.scope "Benchmark"] external data: t = "support";
-  
-  [@bs.get] external getBrowser: t => bool = "browser";
-  
-  [@bs.get] external getDecompilation: t => bool = "decompilation";
-  
-  [@bs.get] external getTimeout: t => bool = "timeout";
+  [@bs.module "benchmark"] [@bs.scope ("Benchmark", "support")] external browser: bool = "browser";
+  [@bs.module "benchmark"] [@bs.scope ("Benchmark", "support")] external timeout: bool = "timeout";
+  [@bs.module "benchmark"] [@bs.scope ("Benchmark", "support")] external decompilation: bool = "decompilation";
 
 };
 
