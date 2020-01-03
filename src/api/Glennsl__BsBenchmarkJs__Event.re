@@ -24,9 +24,5 @@ module Impl =
   let currentTarget: T.t => T.benchmark = Internal.getCurrentTarget;
   let target: T.t => T.benchmark = Internal.getTarget;
   let timeStamp: T.t => int = Internal.getTimeStamp;
+  let getType: T.t => string = Internal.getType;
 };
-
-include Impl({
-  include Types;
-  type t = event;
-});

@@ -12,8 +12,3 @@ module Impl = (T: {
   let getElapsed: T.t => float = Internal.getElapsed;
   let getTimeStamp: T.t => float = Internal.getTimeStamp;
 };
-
-include Impl({
-  include Types;
-  type t = deferred;
-});

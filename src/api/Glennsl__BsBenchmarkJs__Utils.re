@@ -11,7 +11,3 @@ module Impl = (T: {
   let filterBySlowest: array(T.benchmark) => array(T.benchmark) = Internal.filterBySlowest;
   let filterBySuccessful: array(T.benchmark) => array(T.benchmark) = Internal.filterBySuccessful;
 };
-
-include Impl({
-  include Types;
-});

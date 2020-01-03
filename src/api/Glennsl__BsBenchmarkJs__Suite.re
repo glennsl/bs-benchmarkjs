@@ -17,7 +17,9 @@ module Impl =
            let eventTypeFromString: string => eventType;
          },
        ) => {
+
   module Internal = {
+
     include Glennsl__BsBenchmarkJs__FFI.Suite.Impl({
       type t = T.t;
       type benchmark = T.benchmark;
@@ -42,10 +44,18 @@ module Impl =
 
     // TODO: needs testing
     let eventListToString: list(T.eventType) => string =
-      eventList => Belt.List.reduceU(eventList, "", (. str, evt) => {str ++ T.eventTypeToString(evt) ++ " "});
+      eventList =>
+        Belt.List.reduceU(eventList, "", (. str, evt) => {
+          str ++ T.eventTypeToString(evt) ++ " "
+        });
     let addBenchmarkToSuite: (. T.t, T.benchmark) => T.t =
       (. suite, bench) =>
-        addWithOptions(Benchmark.getName(bench), Benchmark.getFn(bench), Benchmark.getOptions(bench), suite);
+        addWithOptions(
+          Benchmark.getName(bench),
+          Benchmark.getFn(bench),
+          Benchmark.getOptions(bench),
+          suite,
+        );
   };
 
   let getName: T.t => string = Internal.getName;
@@ -83,37 +93,49 @@ module Impl =
       };
 
   let filter: (T.benchmark => bool, T.t) => T.t = Internal.filter;
-  let filterByName: (string, T.t) => T.t = Internal.filterByName;
+  let filterByFastest: T.t => T.t = Internal.filterByFastest;
+  let filterBySlowest: T.t => T.t = Internal.filterBySlowest;
+  let filterBySuccessful: T.t => T.t = Internal.filterBySuccessful;
 
   let getListeners: T.t => array(T.eventHandler) = Internal.getListeners;
   let getListenersByEvent: (T.eventType, T.t) => array(T.eventHandler) =
     (eventType, suite) => Internal.getListenersByEvent(T.eventTypeToString(eventType), suite);
 
-  let emit: (T.eventType, T.t) => T.t = (eventType, suite) => Internal.emit(T.eventTypeToString(eventType), suite);
+  let emit: (T.eventType, T.t) => T.t =
+    (eventType, suite) => Internal.emit(T.eventTypeToString(eventType), suite);
 
   let abort: T.t => T.t = Internal.abort;
   let reset: T.t => T.t = Internal.reset;
 
-  let onAbort: (T.eventHandler, T.t) => T.t = (handler, suite) => Internal.on("abort", handler, suite);
-  let onComplete: (T.eventHandler, T.t) => T.t = (handler, suite) => Internal.on("complete", handler, suite);
-  let onCycle: (T.eventHandler, T.t) => T.t = (handler, suite) => Internal.on("cycle", handler, suite);
-  let onError: (T.eventHandler, T.t) => T.t = (handler, suite) => Internal.on("error", handler, suite);
-  let onReset: (T.eventHandler, T.t) => T.t = (handler, suite) => Internal.on("reset", handler, suite);
-  let onStart: (T.eventHandler, T.t) => T.t = (handler, suite) => Internal.on("start", handler, suite);
+  let onAbort: (T.eventHandler, T.t) => T.t =
+    (handler, suite) => Internal.on("abort", handler, suite);
+  let onComplete: (T.eventHandler, T.t) => T.t =
+    (handler, suite) => Internal.on("complete", handler, suite);
+  let onCycle: (T.eventHandler, T.t) => T.t =
+    (handler, suite) => Internal.on("cycle", handler, suite);
+  let onError: (T.eventHandler, T.t) => T.t =
+    (handler, suite) => Internal.on("error", handler, suite);
+  let onReset: (T.eventHandler, T.t) => T.t =
+    (handler, suite) => Internal.on("reset", handler, suite);
+  let onStart: (T.eventHandler, T.t) => T.t =
+    (handler, suite) => Internal.on("start", handler, suite);
 
   let on: (list(T.eventType), T.eventHandler, T.t) => T.t =
     (eventList, handler, suite) => Internal.(eventListToString(eventList)->on(handler, suite));
 
   let removeListener: (list(T.eventType), T.eventHandler, T.t) => T.t =
-    (eventList, handler, suite) => Internal.(eventListToString(eventList)->removeListener(handler, suite));
+    (eventList, handler, suite) =>
+      Internal.(eventListToString(eventList)->removeListener(handler, suite));
 
   let removeListenersByEvent: (list(T.eventType), T.t) => T.t =
-    (eventList, suite) => Internal.(eventListToString(eventList)->removeListenersByEvent(suite));
+    (eventList, suite) =>
+      Internal.(eventListToString(eventList)->removeListenersByEvent(suite));
 
   let removeAllListeners: T.t => T.t = Internal.removeAllListeners;
 
   let toArray: T.t => array(T.benchmark) = Internal.toBenchmarkArray;
-  let toList: T.t => list(T.benchmark) = suite => toArray(suite)->Belt.List.fromArray->Belt.List.reverse;
+  let toList: T.t => list(T.benchmark) =
+    suite => toArray(suite)->Belt.List.fromArray->Belt.List.reverse;
 
   let fromArray: (~options: T.suiteOptions=?, string, array(T.benchmark)) => T.t =
     (~options=?, name, benchArray) => {
@@ -135,8 +157,3 @@ module Impl =
       Belt.List.reverse(benchList)->Belt.List.reduceU(suite, Internal.addBenchmarkToSuite);
     };
 };
-
-include Impl({
-  include Types;
-  type t = suite;
-});

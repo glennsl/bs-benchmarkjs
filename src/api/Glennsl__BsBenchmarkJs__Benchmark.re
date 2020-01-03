@@ -58,8 +58,3 @@ module Impl = (T: {
         )
     );
 };
-
-include Impl({
-  include Types;
-  type t = benchmark;
-});

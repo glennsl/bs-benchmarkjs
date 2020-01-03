@@ -8,8 +8,3 @@ module Impl = (T: {type t;}) => {
   let getPeriod: T.t => float = Internal.getPeriod;
   let getTimeStamp: T.t => float = Internal.getTimeStamp;
 };
-
-include Impl({
-  include Types;
-  type t = times;
-});

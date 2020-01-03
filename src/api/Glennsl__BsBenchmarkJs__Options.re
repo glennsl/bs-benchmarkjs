@@ -354,8 +354,3 @@ module Impl = (T: {
       opt;
     };
 };
-
-include Impl({
-  include Types;
-  type t = options;
-});

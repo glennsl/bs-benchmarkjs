@@ -42,7 +42,9 @@ module Impl =
   [@bs.send.pipe: T.t] external runWithOptions: T.suiteOptions => T.t = "run";
 
   [@bs.send.pipe: T.t] external filter: (T.benchmark => bool) => T.t = "filter";
-  [@bs.send.pipe: T.t] external filterByName: string => T.t = "filter";
+  [@bs.send.pipe: T.t] external filterByFastest: ([@bs.as "fastest"] _) => T.t = "filter";
+  [@bs.send.pipe: T.t] external filterBySlowest: ([@bs.as "slowest"] _) => T.t = "filter";
+  [@bs.send.pipe: T.t] external filterBySuccessful: ([@bs.as "successful"] _) => T.t = "filter";
 
   [@bs.send.pipe: T.t] external getListeners: array(T.eventHandler) = "listeners";
   [@bs.send.pipe: T.t] external getListenersByEvent: string => array(T.eventHandler) = "listeners";
