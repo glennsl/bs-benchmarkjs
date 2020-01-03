@@ -651,7 +651,7 @@ module Suite = {
   
   /**
    * [ getLength(suite) ]
-   * Returns the number of benchmark instances in [ suite ].
+   * Returns the number of benchmark instances contained in [ suite ].
    */
   [@bs.get] external getLength: t => int = "length";
   
@@ -675,7 +675,7 @@ module Suite = {
 
   /**
    * [ add(~options=?, name, fn, suite) ]
-   * Creates a new Benchmark.t from the provided arguments, adds it to [ suite ],
+   * Creates a new benchmark from the provided arguments, adds it to [ suite ],
    * and returns the same [ suite ].
    */
   let add: (~options: options=?, string, testFn, t) => t =
@@ -884,12 +884,56 @@ module Suite = {
    */
   [@bs.send.pipe: t] external filterBySuccessful: ([@bs.as "successful"] _) => t = "filter";
 
+  // internal
+  [@bs.val] [@bs.scope ("Array", "prototype", "push")] external addBenchmark: (t, benchmark) => unit = "call";
+
+  // internal
+  [@bs.val] [@bs.scope ("Array", "prototype", "push")] external addBenchmarkArray: (t, array(benchmark)) => unit = "apply";
+
+  /**
+   * [ addBenchmarkList(benchmarkList, suite) ]
+   * Adds each benchmark from [ benchmarkList ] to [ suite ], and returns [ suite ].
+   */
+  let addBenchmarkList: (list(benchmark), t) => t = (benchmarkList, suite) => {
+    benchmarkList |> Belt.List.toArray |> addBenchmarkArray(suite);
+    suite;
+  };
+
+  /**
+   * [ addBenchmarkArray(benchmark, suite) ]
+   * Adds [ benchmark ] to [ suite ] and returns [ suite ].
+   */
+  let addBenchmark: (benchmark, t) => t = (benchmark, suite) => {
+    addBenchmark(suite, benchmark);
+    suite;
+  };
+
+  /**
+   * [ addBenchmarkArray(benchmarkArray, suite) ]
+   * Adds each benchmark from [ benchmarkArray ] to [ suite ] and returns [ suite ].
+   */
+  let addBenchmarkArray: (array(benchmark), t) => t = (benchmarkArray, suite) => {
+    addBenchmarkArray(suite, benchmarkArray);
+    suite;
+  };
+
 };
 
 module Support = {
 
+  /** [ browser ] Will be set to [ true ] if the code is running in a web browser context. */
   [@bs.module "benchmark"] [@bs.scope ("Benchmark", "support")] external browser: bool = "browser";
+
+  /** [ timeout ] Will be set to [ true ] if the Timers API is made available by the host. */
   [@bs.module "benchmark"] [@bs.scope ("Benchmark", "support")] external timeout: bool = "timeout";
+
+  /**
+   * [ decompilation ]
+   * Will be set to [ true ] if the host runtime supports features that enable code decompilation.
+   * If true, Benchmark.js will decompile and recompile the benchmark code between cycles in order
+   * to prevent periodic runtime optimizations from interfering with benchmark stats over the course
+   * of a run.
+  */
   [@bs.module "benchmark"] [@bs.scope ("Benchmark", "support")] external decompilation: bool = "decompilation";
 
 };
@@ -912,9 +956,9 @@ module Utils = {
 
   [@bs.module "benchmark"] [@bs.scope "Benchmark"] external formatNumber: float => string = "formatNumber";
   
-  /** [ filterBenchmarks(benchmarkArray, predicate) ]:
-   *  Filters an array of benchmark objects based on
-   *  the return value of the predicate function.
+  /**
+   * [ filterBenchmarks(benchmarkArray, predicate) ]
+   * Filters an array of benchmark objects based on the return value of the predicate function.
    */
   [@bs.module "benchmark"] [@bs.scope "Benchmark"] external filterBenchmarks: (array(benchmark), benchmark => bool) => array(benchmark) = "filter";
 
