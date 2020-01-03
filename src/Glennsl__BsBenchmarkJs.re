@@ -509,7 +509,7 @@ module SuiteOptions = {
       ~onError: eventHandler=?,
       ~onReset: eventHandler=?,
       ~onStart: eventHandler=?,
-      t
+      unit
     ) =>
     t =
     (
@@ -520,8 +520,9 @@ module SuiteOptions = {
       ~onError: option(eventHandler)=?,
       ~onReset: option(eventHandler)=?,
       ~onStart: option(eventHandler)=?,
-      opt: t,
+      ()
     ) => {
+      let opt = Glennsl__BsBenchmarkJs__JsUtils.Obj.empty(. );
       let () = {
         switch (name) {
         | None => ()
@@ -786,7 +787,7 @@ module Suite = {
    * [ toList(suite) ]
    * Returns an list of all the benchmarks that are currently assigned to [ suite ].
    */
-  let toList: t => list(benchmark) = suite => toArray(suite)->Belt.List.fromArray->Belt.List.reverse;
+  let toList: t => list(benchmark) = suite => toArray(suite)->Belt.List.fromArray;
   
   /**
    * [ fromArray(~options=?, name, benchmarkArray) ]
@@ -815,7 +816,7 @@ module Suite = {
         | None => make(name)
         | Some(opt) => make(name, ~options=opt)
         };
-      Belt.List.reverse(benchList)->Belt.List.reduceU(suite, Internal.addBenchmarkToSuite);
+      Belt.List.reduceU(benchList, suite, Internal.addBenchmarkToSuite);
     };
 
   /**
@@ -930,13 +931,3 @@ module Utils = {
   [@bs.module "benchmark"] [@bs.scope "Benchmark"] external filterBySuccessful: (array(benchmark), [@bs.as "successful"] _) => array(benchmark) = "filter";
 
 };
-
-let suite: Suite.t =
-  Suite.(
-    make("PerfTest")
-    |> add("test0", (.) => ())
-    |> onStart((. _) => Js.log("-- Running Tests --"))
-    |> onError((. evt) => Event.getType(evt) |> Js.log)
-    |> (thisSuite => onComplete((. _) => Js.log("Done"), thisSuite)
-    |> run)
-  );

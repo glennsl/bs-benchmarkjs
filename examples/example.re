@@ -6,9 +6,9 @@ let () = {
   Suite.(
 
     make("String To Uppercase")
-    |> onStart((. _) => Js.log("-- Running Tests --"))
+    |> onStart((. _) => Js.log("-- Running Benchmarks --\r\n"))
     |> onError((. evt) => Event.getType(evt) |> Js.log)
-    |> onComplete((. _) => Js.log("-- Done --"))
+    |> onComplete((. _) => Js.log("-- Done --\r\n"))
 
     |> add("Map Char Function", (. ) => {
       let result = ref("");
@@ -24,6 +24,12 @@ let () = {
 
     |> run
 
-  ) |> ignore;
+    |> toList
+    |> List.iter( benchmark =>
+        Benchmark.toString(benchmark)
+        |> Js.log
+      )
+
+  );
 
 };
