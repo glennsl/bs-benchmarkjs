@@ -72,9 +72,7 @@ When running performance benchmarks on plain Javascript code, your code is teste
 
 With that in mind, users of this library should take benchmark results with a grain of salt.
 
-In general, writing smaller test cases may yield more variable results, since small differences in compilation strategies will have greater influence on the code.
-
-Likewise, larger test cases will likely yield more normalized results. The obvious downside is that larger, more complicated test cases make it harder to measure specific patterns in isolation.
+In general, writing smaller test cases may yield more variable results, since small differences in compilation strategies will have greater influence on the code. Likewise, larger test cases will likely yield more normalized results. The obvious downside is that larger, more complicated test cases make it harder to measure specific patterns in isolation.
 
 Therefore, it may be more useful to write test cases which perform some *concrete, realistic* task that you care about. That way, any variance in the generated code will more accurately reflect what you can expect to see in real-world applications. This kind of insight is likely to be more beneficial than trivial "micro-benchmarks" in practice.
 
