@@ -200,11 +200,11 @@ module Options = {
   ) => t = "";
 
   let optTest = make(
-    ~async=false
+    ~async=false,
+    ()
   );
 
-  let update =
-      (
+  let update = (
         ~async: option(bool)=?,
         ~defer: option(bool)=?,
         ~delay: option(float)=?,
@@ -226,7 +226,10 @@ module Options = {
         ~queued: option(bool)=?,
         options: t,
       ) => {
-        Js.Obj.empty()->Js.Obj.assign(options)->Js.Obj.assign({
+
+        let result: t = Js.Obj.empty()
+        ->Js.Obj.assign(options)
+        ->Js.Obj.assign({
           "async": async,
           "defer": defer,
           "delay": delay,
@@ -246,7 +249,10 @@ module Options = {
           "setup": setup,
           "teardown": teardown,
           "queued": queued,
-        })
+        });
+
+        result;
+
       };
 
 };
