@@ -1,7 +1,7 @@
 
 let () = {
 
-  open Glennsl__BsBenchmarkJs;
+  open BsBenchmarkJs;
 
   Suite.(
 
