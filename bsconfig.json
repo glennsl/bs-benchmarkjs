@@ -6,7 +6,8 @@
       "subdirs": true
     },
     {
-      "dir": "examples"
+      "dir": "examples",
+      "type": "dev"
     }
   ],
   "in-source": true
