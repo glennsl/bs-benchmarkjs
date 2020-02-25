@@ -3,16 +3,16 @@ type suite;
 type suiteOptions;
 type deferred;
 type event;
-type options;
-type times;
-type stats;
-type platform;
-type support;
 type testFn = (. unit) => unit;
 type setupFn = (. unit) => unit;
 type teardownFn = (. unit) => unit;
 type eventHandler = (. event) => unit;
 type eventType = [ | `abort | `complete | `cycle | `error | `reset | `start | `unknown];
+type options('a) = Js.t({..}) as 'a;
+type times;
+type stats;
+type platform;
+type support;
 
 let eventTypeFromString: string => eventType =
   fun
@@ -41,29 +41,29 @@ module Benchmark = {
   module Internal = {
 
     [@bs.module "benchmark"] [@bs.new] external make: (string, testFn) => t = "Benchmark";
-    [@bs.module "benchmark"] [@bs.new] external makeWithOptions: (string, testFn, options) => t = "Benchmark";
+    [@bs.module "benchmark"] [@bs.new] external makeWithOptions: (string, testFn, options('a)) => t = "Benchmark";
 
     [@bs.send.pipe: t] external run: t = "run";
-    [@bs.send.pipe: t] external runWithOptions: options => t = "run";
+    [@bs.send.pipe: t] external runWithOptions: options('a) => t = "run";
 
     [@bs.send.pipe: t] external clone: t => t = "clone";
-    [@bs.send.pipe: t] external cloneWithOptions: (t, options) => t = "clone";
+    [@bs.send.pipe: t] external cloneWithOptions: (t, options('a)) => t = "clone";
 
   };
 
-  let make: (~options: options=?, string, testFn) => t = (~options=?, name, fn) =>
+  let make: (~options: options('a)=?, string, testFn) => t = (~options=?, name, fn) =>
     switch (options) {
     | (None) => Internal.make(name, fn)
     | (Some(opt)) => Internal.makeWithOptions(name, fn, opt)
     };
 
-  let run: (~options: options=?, t) => t = (~options=?, benchmark) =>
+  let run: (~options: options('a)=?, t) => t = (~options=?, benchmark) =>
     switch (options) {
     | None => Internal.run(benchmark)
     | Some(opt) => Internal.runWithOptions(opt, benchmark)
     };
 
-  let clone: (~options: options=?, t, t) => t =
+  let clone: (~options: options('a)=?, t, t) => t =
     (~options=?, benchmark) =>
       switch (options) {
       | None => Internal.clone(benchmark)
@@ -96,7 +96,7 @@ module Benchmark = {
   
   [@bs.get] external getName: t => string = "name";
   
-  [@bs.get] external getOptions: t => options = "options";
+  [@bs.get] external getOptions: t => options('a) = "options";
       
   [@bs.send.pipe: t] external abort: t = "abort";
   
@@ -150,187 +150,58 @@ module Event = {
 
 module Options = {
 
-  type t = options;
+  type t = options({.
+    "async": Js.nullable(bool),
+    "defer": Js.nullable(bool),
+    "delay": Js.nullable(bool),
+    "id": Js.nullable(string),
+    "initCount": Js.nullable(int),
+    "maxTime": Js.nullable(float),
+    "minSamples": Js.nullable(int),
+    "minTime": Js.nullable(float),
+    "name": Js.nullable(string),
+    "onAbort": Js.nullable(eventHandler),
+    "onComplete": Js.nullable(eventHandler),
+    "onCycle": Js.nullable(eventHandler),
+    "onError": Js.nullable(eventHandler),
+    "onReset": Js.nullable(eventHandler),
+    "onStart": Js.nullable(eventHandler),
+    "fn": Js.nullable(testFn),
+    "setup": Js.nullable(setupFn),
+    "teardown": Js.nullable(teardownFn),
+    "queued": Js.nullable(bool),
+  });
 
-  module Internal = {
-
-    [@bs.get] external getAsync: t => Js.Nullable.t(bool) = "async";
-    [@bs.get] external getDefer: t => Js.Nullable.t(bool) = "defer";
-    [@bs.get] external getDelay: t => Js.Nullable.t(float) = "delay";
-    [@bs.get] external getId: t => Js.Nullable.t(string) = "id";
-    [@bs.get] external getInitCount: t => Js.Nullable.t(int) = "initCount";
-    [@bs.get] external getMaxTime: t => Js.Nullable.t(float) = "maxTime";
-    [@bs.get] external getMinSamples: t => Js.Nullable.t(int) = "minSamples";
-    [@bs.get] external getMinTime: t => Js.Nullable.t(float) = "minTime";
-    [@bs.get] external getName: t => Js.Nullable.t(string) = "name";
-    [@bs.get] external getOnAbort: t => Js.Nullable.t(eventHandler) = "onAbort";
-    [@bs.get] external getOnComplete: t => Js.Nullable.t(eventHandler) = "onComplete";
-    [@bs.get] external getOnCycle: t => Js.Nullable.t(eventHandler) = "onCycle";
-    [@bs.get] external getOnError: t => Js.Nullable.t(eventHandler) = "onError";
-    [@bs.get] external getOnReset: t => Js.Nullable.t(eventHandler) = "onReset";
-    [@bs.get] external getOnStart: t => Js.Nullable.t(eventHandler) = "onStart";
-    [@bs.get] external getFn: t => Js.Nullable.t(testFn) = "fn";
-    [@bs.get] external getSetup: t => Js.Nullable.t(setupFn) = "setup";
-    [@bs.get] external getTeardown: t => Js.Nullable.t(teardownFn) = "teardown";
-    [@bs.get] external getQueued: t => Js.Nullable.t(bool) = "queued";
-
-    [@bs.set] external setAsync: (t, bool) => unit = "async";
-    [@bs.set] external setDefer: (t, bool) => unit = "defer";
-    [@bs.set] external setDelay: (t, float) => unit = "delay";
-    [@bs.set] external setId: (t, string) => unit = "id";
-    [@bs.set] external setInitCount: (t, int) => unit = "initCount";
-    [@bs.set] external setMaxTime: (t, float) => unit = "maxTime";
-    [@bs.set] external setMinSamples: (t, int) => unit = "minSamples";
-    [@bs.set] external setMinTime: (t, float) => unit = "minTime";
-    [@bs.set] external setName: (t, string) => unit = "name";
-    [@bs.set] external setOnAbort: (t, eventHandler) => unit = "onAbort";
-    [@bs.set] external setOnComplete: (t, eventHandler) => unit = "onComplete";
-    [@bs.set] external setOnCycle: (t, eventHandler) => unit = "onCycle";
-    [@bs.set] external setOnError: (t, eventHandler) => unit = "onError";
-    [@bs.set] external setOnReset: (t, eventHandler) => unit = "onReset";
-    [@bs.set] external setOnStart: (t, eventHandler) => unit = "onStart";
-    [@bs.set] external setFn: (t, testFn) => unit = "fn";
-    [@bs.set] external setSetup: (t, setupFn) => unit = "setup";
-    [@bs.set] external setTeardown: (t, teardownFn) => unit = "teardown";
-    [@bs.set] external setQueued: (t, bool) => unit = "queued";
-
-    let nullToOption = Js.Nullable.toOption;
-
-  };
-
-
-  // getters
-  let getAsync: t => option(bool) = Internal.(options => getAsync(options)->nullToOption);
-  
-  let getDefer: t => option(bool) = Internal.(options => getDefer(options)->nullToOption);
-  
-  let getDelay: t => option(float) = Internal.(options => getDelay(options)->nullToOption);
-  
-  let getId: t => option(string) = Internal.(options => getId(options)->nullToOption);
-  
-  let getInitCount: t => option(int) = Internal.(options => getInitCount(options)->nullToOption);
-  
-  let getMaxTime: t => option(float) = Internal.(options => getMaxTime(options)->nullToOption);
-  
-  let getMinSamples: t => option(int) = Internal.(options => getMinSamples(options)->nullToOption);
-  
-  let getMinTime: t => option(float) = Internal.(options => getMinTime(options)->nullToOption);
-  
-  let getName: t => option(string) = Internal.(options => getName(options)->nullToOption);
-  
-  let getOnAbort: t => option(eventHandler) = Internal.(options => getOnAbort(options)->nullToOption);
-  
-  let getOnComplete: t => option(eventHandler) = Internal.(options => getOnComplete(options)->nullToOption);
-  
-  let getOnCycle: t => option(eventHandler) = Internal.(options => getOnCycle(options)->nullToOption);
-  
-  let getOnError: t => option(eventHandler) = Internal.(options => getOnError(options)->nullToOption);
-  
-  let getOnReset: t => option(eventHandler) = Internal.(options => getOnReset(options)->nullToOption);
-  
-  let getOnStart: t => option(eventHandler) = Internal.(options => getOnStart(options)->nullToOption);
-  
-  let getFn: t => option(testFn) = Internal.(options => getFn(options)->nullToOption);
-  
-  let getSetup: t => option(setupFn) = Internal.(options => getSetup(options)->nullToOption);
-  
-  let getTeardown: t => option(teardownFn) = Internal.(options => getTeardown(options)->nullToOption);
-  
-  let getQueued: t => option(bool) = Internal.(options => getQueued(options)->nullToOption);
-
-  // setters
-  let setAsync: (bool, t) => t = (async, opt) => { Internal.setAsync(opt, async); opt; };
-  
-  let setDefer: (bool, t) => t = (defer, opt) => { Internal.setDefer(opt, defer); opt; };
-  
-  let setDelay: (float, t) => t = (delay, opt) => { Internal.setDelay(opt, delay); opt; };
-  
-  let setId: (string, t) => t = (id, opt) => { Internal.setId(opt, id); opt; };
-
-  let setInitCount: (int, t) => t = (initCount, opt) => { Internal.setInitCount(opt, initCount); opt; };
-  
-  let setMaxTime: (float, t) => t = (maxTime, opt) => { Internal.setMaxTime(opt, maxTime); opt; };
-  
-  let setMinSamples: (int, t) => t = (minSamples, opt) => { Internal.setMinSamples(opt, minSamples); opt; };
-  
-  let setMinTime: (float, t) => t = (minTime, opt) => { Internal.setMinTime(opt, minTime); opt; };
-  
-  let setName: (string, t) => t = (name, opt) => { Internal.setName(opt, name); opt; };
-  
-  let setOnAbort: (eventHandler, t) => t = (onAbort, opt) => { Internal.setOnAbort(opt, onAbort); opt; };
-  
-  let setOnComplete: (eventHandler, t) => t = (onComplete, opt) => { Internal.setOnComplete(opt, onComplete); opt; };
-  
-  let setOnCycle: (eventHandler, t) => t = (onCycle, opt) => { Internal.setOnCycle(opt, onCycle); opt; };
-  
-  let setOnError: (eventHandler, t) => t = (onError, opt) => { Internal.setOnError(opt, onError); opt; };
-  
-  let setOnReset: (eventHandler, t) => t = (onReset, opt) => { Internal.setOnReset(opt, onReset); opt; };
-  
-  let setOnStart: (eventHandler, t) => t = (onStart, opt) => { Internal.setOnStart(opt, onStart); opt; };
-  
-  let setFn: (testFn, t) => t = (fn, opt) => { Internal.setFn(opt, fn); opt; };
-  
-  let setSetup: (setupFn, t) => t = (setup, opt) => { Internal.setSetup(opt, setup); opt; };
-  
-  let setTeardown: (teardownFn, t) => t = (teardown, opt) => { Internal.setTeardown(opt, teardown); opt; };
-  
-  let setQueued: (bool, t) => t = (queued, opt) => { Internal.setQueued(opt, queued); opt; };
-
-  // others
   let copy: t => t = options => Glennsl__BsBenchmarkJs__JsUtils.Obj.shallowCopy(. options);
   
-  let empty: unit => t = () => Glennsl__BsBenchmarkJs__JsUtils.Obj.empty(.);
+  let empty: unit => t = Js.Obj.empty;
 
-  let make =
-      (
-        ~async: option(bool)=?,
-        ~defer: option(bool)=?,
-        ~delay: option(float)=?,
-        ~id: option(string)=?,
-        ~initCount: option(int)=?,
-        ~maxTime: option(float)=?,
-        ~minSamples: option(int)=?,
-        ~minTime: option(float)=?,
-        ~name: option(string)=?,
-        ~onAbort: option(eventHandler)=?,
-        ~onComplete: option(eventHandler)=?,
-        ~onCycle: option(eventHandler)=?,
-        ~onError: option(eventHandler)=?,
-        ~onReset: option(eventHandler)=?,
-        ~onStart: option(eventHandler)=?,
-        ~fn: option(testFn)=?,
-        ~setup: option(setupFn)=?,
-        ~teardown: option(teardownFn)=?,
-        ~queued: option(bool)=?,
-        (),
-      ) => {
+  [@bs.obj] external make: (
+    ~async: bool=?,
+    ~defer: bool=?,
+    ~delay: float=?,
+    ~id: string=?,
+    ~initCount: int=?,
+    ~maxTime: float=?,
+    ~minSamples: int=?,
+    ~minTime: float=?,
+    ~name: string=?,
+    ~onAbort: eventHandler=?,
+    ~onComplete: eventHandler=?,
+    ~onCycle: eventHandler=?,
+    ~onError: eventHandler=?,
+    ~onReset: eventHandler=?,
+    ~onStart: eventHandler=?,
+    ~fn: testFn=?,
+    ~setup: setupFn=?,
+    ~teardown: teardownFn=?,
+    ~queued: bool=?,
+    unit,
+  ) => t = "";
 
-    let opt: t = empty();
-
-    let () = {
-      switch (async) { | None => () | Some(x) => Internal.setAsync(opt, x) };
-      switch (defer) { | None => () | Some(x) => Internal.setDefer(opt, x) };
-      switch (delay) { | None => () | Some(x) => Internal.setDelay(opt, x) };
-      switch (id) { | None => () | Some(x) => Internal.setId(opt, x) };
-      switch (initCount) { | None => () | Some(x) => Internal.setInitCount(opt, x) };
-      switch (maxTime) { | None => () | Some(x) => Internal.setMaxTime(opt, x) };
-      switch (minSamples) { | None => () | Some(x) => Internal.setMinSamples(opt, x) };
-      switch (minTime) { | None => () | Some(x) => Internal.setMinTime(opt, x) };
-      switch (name) { | None => () | Some(x) => Internal.setName(opt, x) };
-      switch (onAbort) { | None => () | Some(x) => Internal.setOnAbort(opt, x) };
-      switch (onComplete) { | None => () | Some(x) => Internal.setOnComplete(opt, x) };
-      switch (onCycle) { | None => () | Some(x) => Internal.setOnCycle(opt, x) };
-      switch (onError) { | None => () | Some(x) => Internal.setOnError(opt, x) };
-      switch (onReset) { | None => () | Some(x) => Internal.setOnReset(opt, x) };
-      switch (onStart) { | None => () | Some(x) => Internal.setOnStart(opt, x) };
-      switch (fn) { | None => () | Some(x) => Internal.setFn(opt, x) };
-      switch (setup) { | None => () | Some(x) => Internal.setSetup(opt, x) };
-      switch (teardown) { | None => () | Some(x) => Internal.setTeardown(opt, x) };
-      switch (queued) { | None => () | Some(x) => Internal.setQueued(opt, x) };
-    };
-    opt;
-  };
+  let optTest = make(
+    ~async=false
+  );
 
   let update =
       (
@@ -355,33 +226,29 @@ module Options = {
         ~queued: option(bool)=?,
         options: t,
       ) => {
+        Js.Obj.empty()->Js.Obj.assign(options)->Js.Obj.assign({
+          "async": async,
+          "defer": defer,
+          "delay": delay,
+          "id": id,
+          "initCount": initCount,
+          "maxTime": maxTime,
+          "minSamples": minSamples,
+          "minTime": minTime,
+          "name": name,
+          "onAbort": onAbort,
+          "onComplete": onComplete,
+          "onCycle": onCycle,
+          "onError": onError,
+          "onReset": onReset,
+          "onStart": onStart,
+          "fn": fn,
+          "setup": setup,
+          "teardown": teardown,
+          "queued": queued,
+        })
+      };
 
-    let opt: t = copy(options);
-    
-    let () = {
-      switch (async) { | None => () | Some(x) => Internal.setAsync(opt, x) };
-      switch (defer) { | None => () | Some(x) => Internal.setDefer(opt, x) };
-      switch (delay) { | None => () | Some(x) => Internal.setDelay(opt, x) };
-      switch (id) { | None => () | Some(x) => Internal.setId(opt, x) };
-      switch (initCount) { | None => () | Some(x) => Internal.setInitCount(opt, x) };
-      switch (maxTime) { | None => () | Some(x) => Internal.setMaxTime(opt, x) };
-      switch (minSamples) { | None => () | Some(x) => Internal.setMinSamples(opt, x) };
-      switch (minTime) { | None => () | Some(x) => Internal.setMinTime(opt, x) };
-      switch (name) { | None => () | Some(x) => Internal.setName(opt, x) };
-      switch (onAbort) { | None => () | Some(x) => Internal.setOnAbort(opt, x) };
-      switch (onComplete) { | None => () | Some(x) => Internal.setOnComplete(opt, x) };
-      switch (onCycle) { | None => () | Some(x) => Internal.setOnCycle(opt, x) };
-      switch (onError) { | None => () | Some(x) => Internal.setOnError(opt, x) };
-      switch (onReset) { | None => () | Some(x) => Internal.setOnReset(opt, x) };
-      switch (onStart) { | None => () | Some(x) => Internal.setOnStart(opt, x) };
-      switch (fn) { | None => () | Some(x) => Internal.setFn(opt, x) };
-      switch (setup) { | None => () | Some(x) => Internal.setSetup(opt, x) };
-      switch (teardown) { | None => () | Some(x) => Internal.setTeardown(opt, x) };
-      switch (queued) { | None => () | Some(x) => Internal.setQueued(opt, x) };
-    };
-    opt;
-  };
-  
 };
 
 /**
@@ -609,7 +476,7 @@ module Suite = {
     [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new] external make: string => t = "Suite";
     [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new] external makeWithOptions: (string, suiteOptions) => t = "Suite";
     [@bs.send.pipe: t] external add: (string, testFn) => t = "add";
-    [@bs.send.pipe: t] external addWithOptions: (string, testFn, options) => t = "add";
+    [@bs.send.pipe: t] external addWithOptions: (string, testFn, options('a)) => t = "add";
     [@bs.send.pipe: t] external run: t = "run";
     [@bs.send.pipe: t] external runWithOptions: suiteOptions => t = "run";
     [@bs.send.pipe: t] external clone: t = "clone";
@@ -678,12 +545,14 @@ module Suite = {
    * Creates a new benchmark from the provided arguments, adds it to [ suite ],
    * and returns the same [ suite ].
    */
-  let add: (~options: options=?, string, testFn, t) => t =
+  let add: (~options: options('a)=?, string, testFn, t) => t =
     (~options=?, name, fn, suite) =>
       switch (options) {
       | None => Internal.add(name, fn, suite)
       | Some(opt) => Internal.addWithOptions(name, fn, opt, suite)
       };
+  
+  // let testAdd = add(Options.make(~async = false))
 
   /**
    * [ run(~options=?, suite) ]
