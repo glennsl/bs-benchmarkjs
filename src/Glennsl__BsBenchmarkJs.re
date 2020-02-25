@@ -199,11 +199,6 @@ module Options = {
     unit,
   ) => t = "";
 
-  let optTest = make(
-    ~async=false,
-    ()
-  );
-
   let update = (
         ~async: option(bool)=?,
         ~defer: option(bool)=?,
