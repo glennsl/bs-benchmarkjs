@@ -8,7 +8,7 @@ type setupFn = (. unit) => unit;
 type teardownFn = (. unit) => unit;
 type eventHandler = (. event) => unit;
 type eventType = [ | `abort | `complete | `cycle | `error | `reset | `start | `unknown];
-type options('a) = Js.t({..}) as 'a;
+type options;
 type times;
 type stats;
 type platform;
@@ -41,29 +41,29 @@ module Benchmark = {
   module Internal = {
 
     [@bs.module "benchmark"] [@bs.new] external make: (string, testFn) => t = "Benchmark";
-    [@bs.module "benchmark"] [@bs.new] external makeWithOptions: (string, testFn, options('a)) => t = "Benchmark";
+    [@bs.module "benchmark"] [@bs.new] external makeWithOptions: (string, testFn, options) => t = "Benchmark";
 
     [@bs.send.pipe: t] external run: t = "run";
-    [@bs.send.pipe: t] external runWithOptions: options('a) => t = "run";
+    [@bs.send.pipe: t] external runWithOptions: options => t = "run";
 
     [@bs.send.pipe: t] external clone: t => t = "clone";
-    [@bs.send.pipe: t] external cloneWithOptions: (t, options('a)) => t = "clone";
+    [@bs.send.pipe: t] external cloneWithOptions: (t, options) => t = "clone";
 
   };
 
-  let make: (~options: options('a)=?, string, testFn) => t = (~options=?, name, fn) =>
+  let make: (~options: options=?, string, testFn) => t = (~options=?, name, fn) =>
     switch (options) {
     | (None) => Internal.make(name, fn)
     | (Some(opt)) => Internal.makeWithOptions(name, fn, opt)
     };
 
-  let run: (~options: options('a)=?, t) => t = (~options=?, benchmark) =>
+  let run: (~options: options=?, t) => t = (~options=?, benchmark) =>
     switch (options) {
     | None => Internal.run(benchmark)
     | Some(opt) => Internal.runWithOptions(opt, benchmark)
     };
 
-  let clone: (~options: options('a)=?, t, t) => t =
+  let clone: (~options: options=?, t, t) => t =
     (~options=?, benchmark) =>
       switch (options) {
       | None => Internal.clone(benchmark)
@@ -96,7 +96,7 @@ module Benchmark = {
   
   [@bs.get] external getName: t => string = "name";
   
-  [@bs.get] external getOptions: t => options('a) = "options";
+  [@bs.get] external getOptions: t => options = "options";
       
   [@bs.send.pipe: t] external abort: t = "abort";
   
@@ -150,27 +150,7 @@ module Event = {
 
 module Options = {
 
-  type t = options({.
-    "async": Js.nullable(bool),
-    "defer": Js.nullable(bool),
-    "delay": Js.nullable(bool),
-    "id": Js.nullable(string),
-    "initCount": Js.nullable(int),
-    "maxTime": Js.nullable(float),
-    "minSamples": Js.nullable(int),
-    "minTime": Js.nullable(float),
-    "name": Js.nullable(string),
-    "onAbort": Js.nullable(eventHandler),
-    "onComplete": Js.nullable(eventHandler),
-    "onCycle": Js.nullable(eventHandler),
-    "onError": Js.nullable(eventHandler),
-    "onReset": Js.nullable(eventHandler),
-    "onStart": Js.nullable(eventHandler),
-    "fn": Js.nullable(testFn),
-    "setup": Js.nullable(setupFn),
-    "teardown": Js.nullable(teardownFn),
-    "queued": Js.nullable(bool),
-  });
+  type t = options;
 
   [@bs.obj] external make: (
     ~async: bool=?,
@@ -322,7 +302,7 @@ module Suite = {
     [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new] external make: string => t = "Suite";
     [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new] external makeWithOptions: (string, suiteOptions) => t = "Suite";
     [@bs.send.pipe: t] external add: (string, testFn) => t = "add";
-    [@bs.send.pipe: t] external addWithOptions: (string, testFn, options('a)) => t = "add";
+    [@bs.send.pipe: t] external addWithOptions: (string, testFn, options) => t = "add";
     [@bs.send.pipe: t] external run: t = "run";
     [@bs.send.pipe: t] external runWithOptions: suiteOptions => t = "run";
     [@bs.send.pipe: t] external clone: t = "clone";
@@ -351,28 +331,28 @@ module Suite = {
   };
 
   /**
-   * [ getName(suite) ]
+   * [ name(suite) ]
    * Returns the name of [ suite ].
    */
-  [@bs.get] [@bs.scope "options"] external getName: t => string = "name";
+  [@bs.get] [@bs.scope "options"] external name: t => string = "name";
 
   /**
-   * [ getAborted(suite) ]
+   * [ aborted(suite) ]
    * Returns true if [ suite ] was aborted during a run.
    */
-  [@bs.get] external getAborted: t => bool = "aborted";
+  [@bs.get] external aborted: t => bool = "aborted";
   
   /**
-   * [ getLength(suite) ]
+   * [ length(suite) ]
    * Returns the number of benchmark instances contained in [ suite ].
    */
-  [@bs.get] external getLength: t => int = "length";
+  [@bs.get] external length: t => int = "length";
   
   /**
-   * [ getRunning(suite) ]
+   * [ running(suite) ]
    * Returns true if [ suite ] is currently running.
    */
-  [@bs.get] external getRunning: t => bool = "running";
+  [@bs.get] external running: t => bool = "running";
   
   /**
    * [ make(~options=?, name) ]
@@ -391,14 +371,14 @@ module Suite = {
    * Creates a new benchmark from the provided arguments, adds it to [ suite ],
    * and returns the same [ suite ].
    */
-  let add: (~options: options('a)=?, string, testFn, t) => t =
+  let add: (~options: options=?, string, testFn, t) => t =
     (~options=?, name, fn, suite) =>
       switch (options) {
       | None => Internal.add(name, fn, suite)
       | Some(opt) => Internal.addWithOptions(name, fn, opt, suite)
       };
   
-  // let testAdd = add(Options.make(~async = false))
+  let testAdd = add(~options=Options.make(~async = false, ()));
 
   /**
    * [ run(~options=?, suite) ]
