@@ -1,7 +1,7 @@
 {
   "name": "bs-benchmarkjs",
   "description": "Bindings to Benchmark.js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "scripts": {
     "clean": "bsb -clean-world",
     "build": "bsb -make-world",
@@ -15,14 +15,19 @@
   },
   "keywords": [
     "bucklescript",
+    "benchmark",
     "benchmark.js",
-    "benchmarking"
+    "benchmarkjs",
+    "benchmarking",
+    "reason",
+    "reasonml",
+    "ocaml"
   ],
   "license": "MIT",
   "dependencies": {
     "benchmark": "^2.1.4"
   },
   "devDependencies": {
-    "bs-platform": "^1.8.3"
+    "bs-platform": "^7.1.1"
   }
 }

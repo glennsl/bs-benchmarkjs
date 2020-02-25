@@ -1,7 +1,14 @@
 {
   "name": "bs-benchmarkjs",
-  "sources": ["src", {
-    "dir": "examples",
-    "type": "dev"
-  }]
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "examples",
+      "type": "dev"
+    }
+  ],
+  "in-source": true
 }
