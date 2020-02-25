@@ -70,39 +70,39 @@ module Benchmark = {
       | Some(opt) => Internal.cloneWithOptions(benchmark, opt)
       };
 
-  [@bs.get] external getAborted: t => bool = "aborted";
+  [@bs.get] external aborted: t => bool = "aborted";
 
-  [@bs.get] external getCompiled: t => testFn = "compiled";
+  [@bs.get] external compiled: t => testFn = "compiled";
   
-  [@bs.get] external getCycles: t => int = "cycles";
+  [@bs.get] external cycles: t => int = "cycles";
   
-  [@bs.get] external getCount: t => int = "count";
+  [@bs.get] external count: t => int = "count";
   
-  [@bs.get] external getError: t => Js.Null_undefined.t(Js.Exn.t) = "error";
+  [@bs.get] external error: t => Js.Null_undefined.t(Js.Exn.t) = "error";
   
-  [@bs.get] external getFn: t => testFn = "fn";
+  [@bs.get] external fn: t => testFn = "fn";
   
-  [@bs.get] external getHz: t => float = "hz";
+  [@bs.get] external hz: t => float = "hz";
   
-  [@bs.get] external getRunning: t => bool = "running";
+  [@bs.get] external running: t => bool = "running";
   
-  [@bs.get] external getSetup: t => setupFn = "setup";
+  [@bs.get] external setup: t => setupFn = "setup";
   
-  [@bs.get] external getStats: t => stats = "stats";
+  [@bs.get] external stats: t => stats = "stats";
   
-  [@bs.get] external getTeardown: t => teardownFn = "teardown";
+  [@bs.get] external teardown: t => teardownFn = "teardown";
   
-  [@bs.get] external getTime: t => times = "time";
+  [@bs.get] external time: t => times = "time";
   
-  [@bs.get] external getName: t => string = "name";
+  [@bs.get] external name: t => string = "name";
   
-  [@bs.get] external getOptions: t => options = "options";
+  [@bs.get] external options: t => options = "options";
       
   [@bs.send.pipe: t] external abort: t = "abort";
   
   [@bs.send.pipe: t] external toString: string = "toString";
   
-  [@bs.send.pipe: t] external cmp: t => int = "compare";
+  [@bs.send.pipe: t] external compare: t => int = "compare";
   
   [@bs.send.pipe: t] external reset: t = "reset";
   
@@ -112,13 +112,13 @@ module Deferred = {
   
   type t = deferred;
   
-  [@bs.get] external getBenchmark: t => benchmark = "benchmark";
+  [@bs.get] external benchmark: t => benchmark = "benchmark";
 
-  [@bs.get] external getCycle: t => float = "cycle";
+  [@bs.get] external cycle: t => float = "cycle";
   
-  [@bs.get] external getElapsed: t => float = "elapsed";
+  [@bs.get] external elapsed: t => float = "elapsed";
   
-  [@bs.get] external getTimeStamp: t => float = "timeStamp";
+  [@bs.get] external timeStamp: t => float = "timeStamp";
   
 };
 
@@ -130,21 +130,21 @@ module Event = {
   
   [@bs.module "benchmark"] [@bs.scope "Benchmark"] [@bs.new] external fromEvent: t => t = "Event";
   
-  [@bs.get] external getAborted: t => bool = "aborted";
+  [@bs.get] external aborted: t => bool = "aborted";
 
-  [@bs.get] external getCancelled: t => bool = "cancelled";
+  [@bs.get] external cancelled: t => bool = "cancelled";
   
-  [@bs.get] external getCurrentTarget: t => benchmark = "currentTarget";
+  [@bs.get] external currentTarget: t => benchmark = "currentTarget";
   
-  [@bs.get] external getResult: t => 'a = "result";
+  [@bs.get] external result: t => 'a = "result";
   
-  [@bs.get] external getTarget: t => benchmark = "target";
+  [@bs.get] external target: t => benchmark = "target";
   
-  [@bs.get] external getTimeStamp: t => int = "timeStamp";
+  [@bs.get] external timeStamp: t => int = "timeStamp";
   
-  [@bs.get] external getType: t => string = "type";
+  [@bs.get] external type_: t => string = "type";
   
-  let getType: t => eventType = (event) => eventTypeFromString(getType(event));
+  let type_: t => eventType = (event) => eventTypeFromString(type_(event));
 
 };
 
@@ -308,8 +308,8 @@ module Suite = {
     [@bs.send.pipe: t] external clone: t = "clone";
     [@bs.send.pipe: t] external cloneWithOptions: suiteOptions => t = "clone";
     [@bs.send.pipe: t] external emit: string => t = "emit";
-    [@bs.send.pipe: t] external getListeners: array(eventHandler) = "listeners";
-    [@bs.send.pipe: t] external getListenersByEvent: string => array(eventHandler) = "listeners";
+    [@bs.send.pipe: t] external listeners: array(eventHandler) = "listeners";
+    [@bs.send.pipe: t] external listenersByEvent: string => array(eventHandler) = "listeners";
     [@bs.send.pipe: t] external removeListener: (string, eventHandler) => t = "off";
     [@bs.send.pipe: t] external removeListenersByEvent: string => t = "off";
     [@bs.send.pipe: t] external removeAllListeners: t = "off";
@@ -322,9 +322,9 @@ module Suite = {
     let addBenchmarkToSuite: (. t, benchmark) => t =
       (. suite, bench) =>
         addWithOptions(
-          Benchmark.getName(bench),
-          Benchmark.getFn(bench),
-          Benchmark.getOptions(bench),
+          Benchmark.name(bench),
+          Benchmark.fn(bench),
+          Benchmark.options(bench),
           suite,
         );
 
@@ -519,7 +519,7 @@ module Suite = {
    * Returns an array of all the event listener functions that are listening
    * to the suite's events.
    */
-  let getListeners: t => array(eventHandler) = Internal.getListeners;
+  let listeners: t => array(eventHandler) = Internal.listeners;
 
   /**
    * [ getListenersByEvent(suite) ]
@@ -527,7 +527,7 @@ module Suite = {
    * event type.
    */
   let getListenersByEvent: (eventType, t) => array(eventHandler) =
-    (eventType, suite) => Internal.getListenersByEvent(eventTypeToString(eventType), suite);
+    (eventType, suite) => Internal.listenersByEvent(eventTypeToString(eventType), suite);
 
   /**
    * [ removeListener(eventList, eventListener, suite) ]
@@ -637,13 +637,13 @@ module Times = {
 
   type t = times;
 
-  [@bs.get] external getCycle: t => float = "cycle";
+  [@bs.get] external cycle: t => float = "cycle";
   
-  [@bs.get] external getElapsed: t => float = "elapsed";
+  [@bs.get] external elapsed: t => float = "elapsed";
   
-  [@bs.get] external getPeriod: t => float = "period";
+  [@bs.get] external period: t => float = "period";
   
-  [@bs.get] external getTimeStamp: t => float = "timeStamp";
+  [@bs.get] external timeStamp: t => float = "timeStamp";
   
 };
 
