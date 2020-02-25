@@ -172,10 +172,6 @@ module Options = {
     "queued": Js.nullable(bool),
   });
 
-  let copy: t => t = options => Glennsl__BsBenchmarkJs__JsUtils.Obj.shallowCopy(. options);
-  
-  let empty: unit => t = Js.Obj.empty;
-
   [@bs.obj] external make: (
     ~async: bool=?,
     ~defer: bool=?,
@@ -198,57 +194,6 @@ module Options = {
     ~queued: bool=?,
     unit,
   ) => t = "";
-
-  let update = (
-        ~async: option(bool)=?,
-        ~defer: option(bool)=?,
-        ~delay: option(float)=?,
-        ~id: option(string)=?,
-        ~initCount: option(int)=?,
-        ~maxTime: option(float)=?,
-        ~minSamples: option(int)=?,
-        ~minTime: option(float)=?,
-        ~name: option(string)=?,
-        ~onAbort: option(eventHandler)=?,
-        ~onComplete: option(eventHandler)=?,
-        ~onCycle: option(eventHandler)=?,
-        ~onError: option(eventHandler)=?,
-        ~onReset: option(eventHandler)=?,
-        ~onStart: option(eventHandler)=?,
-        ~fn: option(testFn)=?,
-        ~setup: option(setupFn)=?,
-        ~teardown: option(teardownFn)=?,
-        ~queued: option(bool)=?,
-        options: t,
-      ) => {
-
-        let result: t = Js.Obj.empty()
-        ->Js.Obj.assign(options)
-        ->Js.Obj.assign({
-          "async": async,
-          "defer": defer,
-          "delay": delay,
-          "id": id,
-          "initCount": initCount,
-          "maxTime": maxTime,
-          "minSamples": minSamples,
-          "minTime": minTime,
-          "name": name,
-          "onAbort": onAbort,
-          "onComplete": onComplete,
-          "onCycle": onCycle,
-          "onError": onError,
-          "onReset": onReset,
-          "onStart": onStart,
-          "fn": fn,
-          "setup": setup,
-          "teardown": teardown,
-          "queued": queued,
-        });
-
-        result;
-
-      };
 
 };
 
@@ -320,26 +265,26 @@ module Stats = {
 
   type t = stats;
 
-  /** [ getDeviation(stats) ] Returns the standard deviation of the benchmark sample. */
-  [@bs.get] external getDeviation: t => float = "deviation";
+  /** [ deviation(stats) ] Returns the standard deviation of the benchmark sample. */
+  [@bs.get] external deviation: t => float = "deviation";
   
-  /** [ getMean(stats) ] Returns the mean of the benchmark sample. */
-  [@bs.get] external getMean: t => float = "mean";
+  /** [ mean(stats) ] Returns the mean of the benchmark sample. */
+  [@bs.get] external mean: t => float = "mean";
   
-  /** [ getMOE(stats) ] Returns the margin of error of the benchmark sample. */
-  [@bs.get] external getMOE: t => float = "moe";
+  /** [ moe(stats) ] Returns the margin of error of the benchmark sample. */
+  [@bs.get] external moe: t => float = "moe";
   
-  /** [ getRME(stats) ] Returns the relative margin of error of the benchmark sample. */
-  [@bs.get] external getRME: t => float = "rme";
+  /** [ rme(stats) ] Returns the relative margin of error of the benchmark sample. */
+  [@bs.get] external rme: t => float = "rme";
   
-  /** [ getSample(stats) ] Returns an array of sampled time periods. */
-  [@bs.get] external getSample: t => array(float) = "sample";
+  /** [ sample(stats) ] Returns an array of sampled time periods. */
+  [@bs.get] external sample: t => array(float) = "sample";
   
-  /** [ getSEM(stats) ] Returns the standard error of the mean of the benchmark sample. */
-  [@bs.get] external getSEM: t => float = "sem";
+  /** [ sem(stats) ] Returns the standard error of the mean of the benchmark sample. */
+  [@bs.get] external sem: t => float = "sem";
   
-  /** [ getVariance(stats) ] Returns the variance of the benchmark sample. */
-  [@bs.get] external getVariance: t => float = "variance";
+  /** [ variance(stats) ] Returns the variance of the benchmark sample. */
+  [@bs.get] external variance: t => float = "variance";
 
 };
 
@@ -347,28 +292,13 @@ module SuiteOptions = {
 
   type t = suiteOptions;
 
-  [@bs.get] external getName: t => Js.Nullable.t(string) = "name";
-  [@bs.get] external getOnAbort: t => Js.Nullable.t(eventHandler) = "onAbort";
-  [@bs.get] external getOnComplete: t => Js.Nullable.t(eventHandler) = "onComplete";
-  [@bs.get] external getOnCycle: t => Js.Nullable.t(eventHandler) = "onCycle";
-  [@bs.get] external getOnError: t => Js.Nullable.t(eventHandler) = "onError";
-  [@bs.get] external getOnReset: t => Js.Nullable.t(eventHandler) = "onReset";
-  [@bs.get] external getOnStart: t => Js.Nullable.t(eventHandler) = "onStart";
-
-  [@bs.set] external setName: (t, string) => unit = "name";
-  [@bs.set] external setOnAbort: (t, eventHandler) => unit = "onAbort";
-  [@bs.set] external setOnComplete: (t, eventHandler) => unit = "onComplete";
-  [@bs.set] external setOnCycle: (t, eventHandler) => unit = "onCycle";
-  [@bs.set] external setOnError: (t, eventHandler) => unit = "onError";
-  [@bs.set] external setOnReset: (t, eventHandler) => unit = "onReset";
-  [@bs.set] external setOnStart: (t, eventHandler) => unit = "onStart";
-
   /**
    * [ make(...options) ]
    * Creates a new [ suiteOptions ] object with the specified properties.
    * All properties on the object are optional.
    */
-  let make:
+
+  [@bs.obj] external make:
     (
       ~name: string=?,
       ~onAbort: eventHandler=?,
@@ -379,92 +309,7 @@ module SuiteOptions = {
       ~onStart: eventHandler=?,
       unit
     ) =>
-    t =
-    (
-      ~name: option(string)=?,
-      ~onAbort: option(eventHandler)=?,
-      ~onComplete: option(eventHandler)=?,
-      ~onCycle: option(eventHandler)=?,
-      ~onError: option(eventHandler)=?,
-      ~onReset: option(eventHandler)=?,
-      ~onStart: option(eventHandler)=?,
-      ()
-    ) => {
-      let opt = Glennsl__BsBenchmarkJs__JsUtils.Obj.empty(. );
-      let () = {
-        switch (name) {
-        | None => ()
-        | Some(x) => setName(opt, x)
-        };
-        switch (onAbort) {
-        | None => ()
-        | Some(x) => setOnAbort(opt, x)
-        };
-        switch (onComplete) {
-        | None => ()
-        | Some(x) => setOnComplete(opt, x)
-        };
-        switch (onCycle) {
-        | None => ()
-        | Some(x) => setOnCycle(opt, x)
-        };
-        switch (onError) {
-        | None => ()
-        | Some(x) => setOnError(opt, x)
-        };
-        switch (onReset) {
-        | None => ()
-        | Some(x) => setOnReset(opt, x)
-        };
-        switch (onStart) {
-        | None => ()
-        | Some(x) => setOnStart(opt, x)
-        };
-      };
-      opt;
-    };
-
-  /** [ getName(suiteOptions) ] returns the 'name' property assigned to [suiteOptions]. */
-  let getName: t => option(string) = (opt) => Js.Nullable.toOption(getName(opt));
-  
-  /** [ getOnAbort(suiteOptions) ] returns the 'onAbort' event listener assigned to [suiteOptions]. */
-  let getOnAbort: t => option(eventHandler) = (opt) => Js.Nullable.toOption(getOnAbort(opt));
-  
-  /** [ getOnComplete(suiteOptions) ] returns the 'onComplete' event listener assigned to [suiteOptions]. */
-  let getOnComplete: t => option(eventHandler) = (opt) => Js.Nullable.toOption(getOnComplete(opt));
-  
-  /** [ getOnCycle(suiteOptions) ] returns the 'onCycle' event listener assigned to [suiteOptions]. */
-  let getOnCycle: t => option(eventHandler) = (opt) => Js.Nullable.toOption(getOnCycle(opt));
-  
-  /** [ getOnError(suiteOptions) ] returns the 'onError' event listener assigned to [suiteOptions]. */
-  let getOnError: t => option(eventHandler) = (opt) => Js.Nullable.toOption(getOnError(opt));
-  
-  /** [ getOnReset(suiteOptions) ] returns the 'onReset' event listener assigned to [suiteOptions]. */
-  let getOnReset: t => option(eventHandler) = (opt) => Js.Nullable.toOption(getOnReset(opt));
-  
-  /** [ getOnStart(suiteOptions) ] returns the 'onStart' event listener assigned to [suiteOptions]. */
-  let getOnStart: t => option(eventHandler) = (opt) => Js.Nullable.toOption(getOnStart(opt));
-
-  /** [ setName(suiteOptions) ] mutates [ suiteOptions ] by setting its 'name' property. */
-  let setName: (string, suiteOptions) => suiteOptions = (name, opt) => { setName(opt, name); opt; };
-
-  /** [ setOnAbort(suiteOptions) ] mutates [ suiteOptions ] by setting its 'onAbort' property. */
-  let setOnAbort: (eventHandler, suiteOptions) => suiteOptions = (name, opt) => { setOnAbort(opt, name); opt; };
-
-  /** [ setOnComplete(suiteOptions) ] mutates [ suiteOptions ] by setting its 'onComplete' property. */
-  let setOnComplete: (eventHandler, suiteOptions) => suiteOptions = (name, opt) => { setOnComplete(opt, name); opt; };
-  
-  /** [ setOnCycle(suiteOptions) ] mutates [ suiteOptions ] by setting its 'onCycle' property. */
-  let setOnCycle: (eventHandler, suiteOptions) => suiteOptions = (name, opt) => { setOnCycle(opt, name); opt; };
-  
-  /** [ setOnError(suiteOptions) ] mutates [ suiteOptions ] by setting its 'onError' property. */
-  let setOnError: (eventHandler, suiteOptions) => suiteOptions = (name, opt) => { setOnError(opt, name); opt; };
-  
-  /** [ setOnReset(suiteOptions) ] mutates [ suiteOptions ] by setting its 'onReset' property. */
-  let setOnReset: (eventHandler, suiteOptions) => suiteOptions = (name, opt) => { setOnReset(opt, name); opt; };
-  
-  /** [ setOnStart(suiteOptions) ] mutates [ suiteOptions ] by setting its 'onStart' property. */
-  let setOnStart: (eventHandler, suiteOptions) => suiteOptions = (name, opt) => { setOnStart(opt, name); opt; };
+    t = "";
 
 };
 
