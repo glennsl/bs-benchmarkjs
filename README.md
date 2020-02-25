@@ -1,7 +1,9 @@
 
 # bs-benchmarkjs
 
-BuckleScript external type bindings to [Benchmark.js](https://benchmarkjs.com/), an excellent JavaScript performance benchmark library.
+`bs-benchmarkjs` provides BuckleScript external type bindings to [Benchmark.js](https://benchmarkjs.com/), an excellent JavaScript performance benchmark library. This package attempts to provide a faithful representation of the original JavaScript API, but with a small number of opinionated restrictions & additions to make it friendlier to consume from ReasonML or OCaml.
+
+While much of the API is documented in our source code via standard 'doc-comments', it may be helpful to refer to the [official Benchmark.js API docs](https://benchmarkjs.com/docs). (Please note that these docs may not be 100% updated with the library version in few cases.)
 
 ## Installation
 
@@ -58,3 +60,7 @@ let () = {
 
 };
 ```
+
+## Contributing
+
+All suggestions and contributions are welcome. If you find a bug or would like to see some improvements, please file an issue on GitHub to discuss. Also, we welcome any pull requests, and we will happily merge them after review, as long as they conform to the main goals of this project.
